@@ -1,10 +1,8 @@
 package com.zhytel.myworkphoto.domain
 
-import com.zhytel.myworkphoto.data.pojo.User
+data class Url(
 
-//data class Url(
-//
-//    private val urls: Urls,
-//    private val user: User
-//
-//)
+    val urls: Urls,
+    val user: User
+
+)

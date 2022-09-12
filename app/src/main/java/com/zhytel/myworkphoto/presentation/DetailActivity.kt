@@ -10,24 +10,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.zhytel.myworkphoto.R
 import com.zhytel.myworkphoto.data.pojo.UrlDto
+import com.zhytel.myworkphoto.databinding.ActivityDatailBinding
 
 class DetailActivity : AppCompatActivity() {
 
-    private lateinit var urlDto: UrlDto
-    private lateinit var detailViewModel: DetailViewModel
-    private var imageView:ImageView? = null
+    private lateinit var binding: ActivityDatailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_datail)
-        imageView = findViewById(R.id.imageDetail)
-        detailViewModel = ViewModelProvider(this)[DetailViewModel::class.java]
+        binding = ActivityDatailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         if (!intent.hasExtra(ID)) {
             finish()
             return
         }
         val id = intent.getStringExtra(ID)
-        Picasso.get().load(id).into(imageView)
+        Picasso.get().load(id).into(binding.imageDetail)
     }
     companion object{
         private const val ID = "id"

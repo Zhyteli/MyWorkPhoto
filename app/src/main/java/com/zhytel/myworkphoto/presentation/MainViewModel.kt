@@ -9,6 +9,7 @@ import com.zhytel.myworkphoto.domain.GetUrlsListUseCase
 import com.zhytel.myworkphoto.domain.LoadDataUseCase
 import com.zhytel.myworkphoto.presentation.adapters.MainAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
@@ -17,15 +18,16 @@ class MainViewModel : ViewModel() {
 
     private val repository = UrlRepositoryImpl()
 
-    private val getImageUrlsUseCase = GetUrlsListUseCase(repository)
     private val getUrlsListUseCase = GetUrlsListUseCase(repository)
     private val loadDataUseCase = LoadDataUseCase(repository)
 
     var urlsList = getUrlsListUseCase()
-    val API_KEY =
+
+    private val compositeDisposable = CompositeDisposable()
+
+    private val API_KEY =
         "o-vVNCE59pckIkO6Tjg7JYtU_F5yqBaX-uRdUhcSOcA"
 
-    fun getImageUrls(id: Int) = getImageUrlsUseCase()
 
     init {
         viewModelScope.launch {
@@ -38,11 +40,15 @@ class MainViewModel : ViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 adapter.setImage(it.toMutableList())
-                Log.d("toList", it.toString())
-            },
-                { Log.d("erro", it.toString()) }
-            )
+            },{
+                throw RuntimeException(it.message)
+            })
+        compositeDisposable.add(nt)
+    }
 
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
     }
 
 }

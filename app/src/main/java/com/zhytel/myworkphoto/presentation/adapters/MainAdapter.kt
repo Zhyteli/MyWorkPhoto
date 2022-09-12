@@ -45,13 +45,10 @@ class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val url: UrlDto = imageList[position]
         Picasso.get().load(url.urls.small).into(holder.image)
-        holder.textContent.text = url.user.name
+        holder.textContent.text = url.userDto.name
 
         holder.itemView.setOnClickListener{
             onPosterClickListener?.onPosterClick(position)
         }
     }
-
-
-
 }

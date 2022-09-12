@@ -2,7 +2,6 @@ package com.zhytel.myworkphoto.domain
 
 import androidx.lifecycle.LiveData
 import com.zhytel.myworkphoto.data.pojo.UrlDto
-import com.zhytel.myworkphoto.data.pojo.UrlsDto
 
 interface UrlRepository {
 
