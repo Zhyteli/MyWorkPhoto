@@ -1,7 +1,7 @@
 package com.zhytel.myworkphoto.domain
 
 class GetImageUrlsUseCase(
-    private val repository: UrlsRepository
+    private val repository: UrlRepository
 ) {
-    operator fun invoke(image: String) = repository.getImageUrls(image)
+    operator fun invoke(id: String) = repository.getImageUrls(id)
 }
