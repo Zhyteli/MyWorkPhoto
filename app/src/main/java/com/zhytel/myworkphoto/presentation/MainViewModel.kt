@@ -1,25 +1,21 @@
 package com.zhytel.myworkphoto.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.zhytel.myworkphoto.data.ApiFactoty
-import com.zhytel.myworkphoto.data.repository.UrlRepositoryImpl
+import com.zhytel.myworkphoto.data.ApiService
 import com.zhytel.myworkphoto.domain.GetUrlsListUseCase
-import com.zhytel.myworkphoto.domain.LoadDataUseCase
 import com.zhytel.myworkphoto.presentation.adapters.MainAdapter
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    private val apiService = ApiFactoty.apiService
-
-    private val repository = UrlRepositoryImpl()
-
-    private val getUrlsListUseCase = GetUrlsListUseCase(repository)
-    private val loadDataUseCase = LoadDataUseCase(repository)
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    getUrlsListUseCase:GetUrlsListUseCase,
+    mainAdapter: MainAdapter,
+    private val apiService:ApiService
+) : ViewModel() {
 
     var urlsList = getUrlsListUseCase()
 
@@ -28,12 +24,8 @@ class MainViewModel : ViewModel() {
     private val API_KEY =
         "o-vVNCE59pckIkO6Tjg7JYtU_F5yqBaX-uRdUhcSOcA"
 
+    val adapter = mainAdapter
 
-    init {
-        viewModelScope.launch {
-            loadDataUseCase
-        }
-    }
     fun loadData(adapter: MainAdapter, page: Int) {
         val nt = apiService.getImageUrls(API_KEY, page.toString())
             .subscribeOn(Schedulers.io())

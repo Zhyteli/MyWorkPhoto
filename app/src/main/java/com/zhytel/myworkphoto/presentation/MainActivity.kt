@@ -1,21 +1,19 @@
 package com.zhytel.myworkphoto.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.zhytel.myworkphoto.data.pojo.UrlDto
 import com.zhytel.myworkphoto.databinding.ActivityMainBinding
 import com.zhytel.myworkphoto.presentation.adapters.MainAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var mainAdapter: MainAdapter
+    private val viewModel:MainViewModel by viewModels()
     private var page = 0
     private var reviews: MutableList<UrlDto> = ArrayList()
     private lateinit var binding: ActivityMainBinding
@@ -25,19 +23,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainAdapter = MainAdapter()
         binding.recyclerViewMain.layoutManager = GridLayoutManager(
             this,
             2
         )
-        binding.recyclerViewMain.adapter = mainAdapter
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        binding.recyclerViewMain.adapter = viewModel.adapter
 
-        viewModel.loadData(mainAdapter, 0)
+        viewModel.loadData(viewModel.adapter, 0)
 
         viewModel.urlsList.observe(this) {
             reviews = it
-            mainAdapter.setImage(reviews)
+            viewModel.adapter.setImage(reviews)
         }
         onClick()
     }
@@ -47,17 +43,17 @@ class MainActivity : AppCompatActivity() {
             if (page < 1) {
                 binding.page1.visibility = View.GONE
             }
-            viewModel.loadData(mainAdapter, --page)
+            viewModel.loadData(viewModel.adapter, --page)
         }
         binding.page3.setOnClickListener {
-            viewModel.loadData(mainAdapter, ++page)
+            viewModel.loadData(viewModel.adapter, ++page)
             if (page > 1) {
                 binding.page1.visibility = View.VISIBLE
             }
         }
-        mainAdapter.setOnPosterClickListener(object : MainAdapter.OnPosterClickListener {
+        viewModel.adapter.setOnPosterClickListener(object : MainAdapter.OnPosterClickListener {
             override fun onPosterClick(position: Int) {
-                val urlDto: UrlDto = mainAdapter.getImage()[position]
+                val urlDto: UrlDto = viewModel.adapter.getImage()[position]
                 val intent = DetailActivity.newIntent(
                     this@MainActivity,
                     urlDto.urls.full

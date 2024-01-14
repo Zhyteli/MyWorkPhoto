@@ -9,5 +9,4 @@ interface UrlRepository {
 
     fun getImageUrls(id: String): UrlDto
 
-    fun loadData()
 }

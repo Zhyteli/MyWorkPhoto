@@ -21,18 +21,4 @@ class UrlRepositoryImpl : UrlRepository {
         return imageList.find { it.userDto.id == id }
             ?: throw RuntimeException("Element with id $id not found")
     }
-
-
-    override fun loadData() {
-//        val nt = apiService.getImageUrls(API_KEY, "1")
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                it.map { it.urls }
-//                imageListLD.value = imageList.toList()
-//                Log.d("toListfr", it.toString())
-//            },
-//                { Log.d("erro", it.toString())}
-//            )
-    }
 }
